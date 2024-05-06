@@ -13,9 +13,14 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
 const exitHandler = () => {
   if (server) {
-    server.close(() => {
-      logger.info('Server closed');
-      process.exit(1);
+    server.close((err) => {
+      if (err) {
+        logger.error('Error closing the server:', err);
+        process.exit(1);
+      } else {
+        logger.info('Server closed');
+        process.exit(0); // Exit with success status
+      }
     });
   } else {
     process.exit(1);
